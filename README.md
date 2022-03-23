@@ -94,6 +94,9 @@ Get a overview of what will be deployed
 # Enter into the three musketeers container
 $ make cli
 
+#cd into front end
+$ cd frontend
+
 # Install the new dependecy
 $ npm install --save-dev playwright
 
