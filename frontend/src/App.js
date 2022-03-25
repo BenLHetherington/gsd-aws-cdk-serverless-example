@@ -15,9 +15,14 @@ import githubLogo from 'images/githubLogo.png'
 
 function App() {
   const [userCount, setUserCount] = useState(false);
-  const [RID, setRID] = useState(false);
+  const [RID, setRID] = useState(10);
   const [StartDate, setStartDate] = useState(false);
   const [EndDate, setEndDate] = useState(false);
+  const [passiveGrowthVar, setpassiveGrowthVar] = useState(false);
+  const [BeginningValue, setBeginningValue] = useState(false);
+  const [EndingValue, setEndingValue] = useState(false);
+  const [TotalSalesGrowth, setTotalSalesGrowth] = useState(false);
+  const [InfluencerEconomicFactorImpact, setInfluencerEconomicFactorImpact] = useState(false);
 
 //  const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
 
@@ -28,21 +33,28 @@ function App() {
   //Special handling to use localhost SAM API if running locally via npm start(make run)
   const apiUrl = (process.env.NODE_ENV !== 'development') ? 'https://' + process.env.REACT_APP_USER_API_DOMAIN + '/users' : process.env.REACT_APP_USER_API_URL_LOCAL_SAM
   console.log('apiUrl: ', apiUrl)
-  console.log('RID: ', RID)
-  console.log('StartDate: ', StartDate)
-  console.log('EndDate: ', EndDate)
+  // console.log('RID: ', RID)
+  // console.log('StartDate: ', StartDate)
+  // console.log('EndDate: ', EndDate)
 
   //Prevent continuous reloading calling API each time
   useEffect(() => {
-    fetch(apiUrl+"?RID="+RID+"&StartDate="+StartDate+"&EndDate="+EndDate)
-    .then(response => response.json())
-    .then(response => {
-      console.log(response)
-      setUserCount(response['User count'])
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    if (RID && StartDate && EndDate){
+      fetch(apiUrl+"?RID="+RID+"&StartDate="+StartDate+"&EndDate="+EndDate)
+      .then(response => response.json())
+      .then(response => {
+        console.log(response)
+        setUserCount(response['User count'])
+        setpassiveGrowthVar(response['passiveGrowthVar'])
+        setBeginningValue(response['BeginningValue'])
+        setEndingValue(response['EndingValue'])
+        setTotalSalesGrowth(response['TotalSalesGrowth'])
+        setInfluencerEconomicFactorImpact(response['InfluencerEconomicFactorImpact'])
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    }
   }, [RID, StartDate, EndDate] );
   
   return (
@@ -114,9 +126,16 @@ function App() {
             <option value="65">  Limited Service Eating Places </option>
           </select>
           <br/>
+          <br/>
           <Typography>
           This demo shows the passive growth over the specified time frame.
           </Typography>
+          <br/>
+          <Typography variant='h5'>Passive Growth: {passiveGrowthVar}</Typography>
+          <Typography variant='h6'>Total Influencer Economic Factor Impact: {InfluencerEconomicFactorImpact}</Typography>
+          <Typography variant='h6'>Total sales Growth: {TotalSalesGrowth}</Typography>
+          <Typography variant='h6'>Total Sales In {StartDate}: {BeginningValue}</Typography>
+          <Typography variant='h6'>Total Sales In {EndDate}: {EndingValue}</Typography>
           <br/>
           <Typography className='visitorCounter'>Visitor Count: {userCount}</Typography>
         </Container>
