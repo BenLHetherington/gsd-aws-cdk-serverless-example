@@ -66,11 +66,95 @@ def updateUserCount(count):
             logger.error("UNEXPECTED ERROR from DDB: %s" % e)
 
 
+# def passiveGrowth(BEGdate, ENDdate, RID):
+#     import pandas as pd
+#     import openpyxl
+
+#     #Reads Data In
+#     sarsales = pd.read_excel(r'C:\Users\hobbi\PycharmProjects\Abbott\data.xlsx', sheet_name='sarsales')
+#     #sarsalesColumns = sarsales.columns.tolist()
+#     sarsales=sarsales.to_numpy()
+#     ElastRSector = pd.read_excel(r'C:\Users\hobbi\PycharmProjects\Abbott\data.xlsx', sheet_name='Elasticites')
+#     ElastRSectorColumns = ElastRSector.columns.tolist()
+#     ElastRSector=ElastRSector.to_numpy()
+#     EFactors = pd.read_excel(r'C:\Users\hobbi\PycharmProjects\Abbott\data.xlsx', sheet_name='Econ Factors data')
+#     EFactors=EFactors.to_numpy()
+#     SizeSarsales = sarsales.shape[0]
+#     SizeEFactors = EFactors.shape[0]
+#     SizeElastRSector = ElastRSector.shape[0]
+#     WidthElastRSector = ElastRSector.shape[1]
+
+#     #Declares a few variables as set up
+#     TRBID = RID * 1000000 + BEGdate
+#     TREID = RID * 1000000 + ENDdate
+#     TotalEconomicFactor = 0
+#     factors = []
+
+#     #Gets rsale for start and end
+#     i=0
+#     while i < SizeSarsales:
+#         if sarsales[i][2] == TRBID:
+#             RSaleBeg = sarsales[i][4]
+#         if sarsales[i][2] == TREID:
+#             RSaleEnd = sarsales[i][4]
+#         i=i+1
+
+#     #Sets TGRSales
+#     TGRSales = (RSaleEnd - RSaleBeg)/RSaleBeg
+
+#     #Gets index of interest from EFactors
+#     i=0
+#     while i < SizeEFactors:
+#         if EFactors[i][0] == BEGdate:
+#             EFactorsIndex1 = i
+#         if EFactors[i][0] == ENDdate:
+#             EFactorsIndex2 = i
+#         i=i+1
+
+#     ##Finds none zero values in EfactorsIndex1 and EfactorsIndex2 and calculates factors
+#     ##----------assumes its sorted (ie column[x] is the same factor in EFactors and ElastRSector
+#     ##Generates index we care about from ElastRSector
+#     i = 0
+#     while i < SizeElastRSector:
+#         if ElastRSector[i][0] == RID:
+#             ElastRSectorIndex = i
+#             #finds none-zero values
+#             j=2
+#             while j < WidthElastRSector:
+#                 if ElastRSector[i][j] != 0:
+#                     #None zero Column
+#                     factors.append(j)
+#                     #Factor Name
+#                     #factors.append(ElastRSector[0][j])
+#                     factors.append(ElastRSectorColumns[j])
+#                     temp1=ElastRSector[i][j]
+#                     #Elastisity
+#                     factors.append(ElastRSector[i][j])
+#                     temp2=((EFactors[EFactorsIndex2][j-1] - EFactors[EFactorsIndex1][j-1]) / EFactors[EFactorsIndex1][j-1])
+#                     #growth
+#                     factors.append((EFactors[EFactorsIndex2][j-1] - EFactors[EFactorsIndex1][j-1]) / EFactors[EFactorsIndex1][j-1])
+#                     #Impact
+#                     factors.append(temp1*temp2)
+#                     #Begining factor
+#                     factors.append(EFactors[EFactorsIndex1][j-1])
+#                     #Ending factor
+#                     factors.append(EFactors[EFactorsIndex2][j - 1])
+#                     TotalEconomicFactor = TotalEconomicFactor + temp1 * temp2
+#                 j=j+1
+
+#         i=i+1
+
+#     factors = np.reshape(factors, (-1, 7))
+#     Sizefactors = factors.shape[0]
+#     PassiveGrowth = TotalEconomicFactor / TGRSales
 
 def lambda_handler(event, context):
+    param1=event['multiValueQueryStringParameters']['RID']
+    print(param1)
 
     user_count = getUserCount()
     updateUserCount(user_count)
+    # passiveGrowth(BEGdate, ENDdate, RID)
 
     return {
         "statusCode": 200,
@@ -81,6 +165,6 @@ def lambda_handler(event, context):
             'Content-Type': 'application/json'
         },
         "body": json.dumps({
-            "User count": str(user_count),
+            "User count": str(param1),
         }),
     }
