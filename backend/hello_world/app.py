@@ -187,14 +187,19 @@ def lambda_handler(event, context):
     updateUserCount(user_count)
     passiveGrowthVar, TotalEconomicFactor, TotalSalesGrowth, RSaleBeg, RSaleEnd = passiveGrowth(StartDate, EndDate, RID)
     logger.info("passiveGrowthVar: "+str(passiveGrowthVar))
+    logger.info("BeginningValue: "+str(RSaleBeg))
+    logger.info("EndingValue: "+str(RSaleEnd))
+    logger.info("TotalSalesGrowth: "+str(TotalSalesGrowth))
+    logger.info("InfluencerEconomicFactorImpact: "+str(TotalEconomicFactor))
+    logger.info("User count: "+str(user_count))
 
     return {
         "statusCode": 200,
-        'headers': {
-            'Access-Control-Allow-Origin': os.environ['CORS_URL'],
-            'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Allow-Headers': 'Authorization',
-            'Content-Type': 'application/json'
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+            "Content-Type": "application/json"
         },
         "body": json.dumps({
             "User count": str(user_count),
@@ -202,6 +207,6 @@ def lambda_handler(event, context):
             "BeginningValue": str(RSaleBeg),
             "EndingValue": str(RSaleEnd),
             "TotalSalesGrowth": str(TotalSalesGrowth),
-            "InfluencerEconomicFactorImpact": str(TotalEconomicFactor),
+            "InfluencerEconomicFactorImpact": str(TotalEconomicFactor)
         }),
     }

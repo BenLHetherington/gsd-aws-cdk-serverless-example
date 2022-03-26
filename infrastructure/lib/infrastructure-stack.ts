@@ -145,7 +145,7 @@ export class InfrastructureStack extends Stack {
       runtime: lambda.Runtime.PYTHON_3_8,
       logRetention: logs.RetentionDays.ONE_MONTH,
       handler: 'app.lambda_handler',
-      timeout: Duration.seconds(20),
+      timeout: Duration.seconds(60),
       environment: {
         'TABLE_NAME': ddb.tableName,
         'CORS_URL': 'https://' + siteDomain,
